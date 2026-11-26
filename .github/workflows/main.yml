@@ -1,23 +1,19 @@
 
-name: PrimeNet VPN Build
+name: PrimeNet VPN Setup
 
 on:
   push:
     branches:
       - main
       - master
-  pull_request:
-    branches:
-      - main
-      - master
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  build:
-    name: Build Android APK
+  setup:
+    name: Generate Flutter Android Project
     runs-on: ubuntu-latest
 
     steps:
@@ -36,13 +32,26 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Generate Flutter Project
+        run: |
+          flutter create \
+            --platforms=android \
+            --project-name primenet_vpn \
+            --org com.primenetvpn \
+            .
+
+      - name: Save Flutter Project Structure
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Initialize PrimeNet VPN Flutter Android project"
+
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Check Dart Code
+      - name: Analyze Dart Code
         run: flutter analyze
 
-      - name: Build Release APK
+      - name: Build Android APK
         run: flutter build apk --release
 
       - name: Upload APK
