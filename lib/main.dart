@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
+import 'screens/create_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,7 +77,7 @@ class _PrimeNetShellState extends State<PrimeNetShell> {
   Widget build(BuildContext context) {
     final pages = [
       const PrimeNetHomeScreen(),
-      const CreateScreen(),
+      const PrimeNetCreateScreen(),
       const LogsScreen(),
       SettingsScreen(
         darkMode: widget.darkMode,
@@ -97,7 +98,10 @@ class _PrimeNetShellState extends State<PrimeNetShell> {
           ),
         ],
       ),
-      body: pages[selectedIndex],
+      body: IndexedStack(
+        index: selectedIndex,
+        children: pages,
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
         onDestinationSelected: (index) {
@@ -126,17 +130,6 @@ class _PrimeNetShellState extends State<PrimeNetShell> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class CreateScreen extends StatelessWidget {
-  const CreateScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Your saved VPN profiles will appear here.'),
     );
   }
 }
