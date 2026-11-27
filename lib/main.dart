@@ -7,7 +7,8 @@ void main() {
 }
 
 const Color primeBlue = Color(0xFF168BFF);
-const Color primeBackground = Color(0xFF050918);
+const Color primeCyan = Color(0xFF00C8FF);
+const Color primeNavy = Color(0xFF050918);
 
 class PrimeNetApp extends StatefulWidget {
   const PrimeNetApp({super.key});
@@ -27,10 +28,10 @@ class _PrimeNetAppState extends State<PrimeNetApp> {
       themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: primeBackground,
+        scaffoldBackgroundColor: primeNavy,
         colorScheme: const ColorScheme.dark(
           primary: primeBlue,
-          secondary: Color(0xFF00C8FF),
+          secondary: primeCyan,
           surface: Color(0xFF101B32),
         ),
         useMaterial3: true,
@@ -43,7 +44,7 @@ class _PrimeNetAppState extends State<PrimeNetApp> {
         ),
         useMaterial3: true,
       ),
-      home: PrimeNetHome(
+      home: PrimeNetShell(
         darkMode: darkMode,
         onThemeChanged: (value) {
           setState(() => darkMode = value);
@@ -53,8 +54,8 @@ class _PrimeNetAppState extends State<PrimeNetApp> {
   }
 }
 
-class PrimeNetHome extends StatefulWidget {
-  const PrimeNetHome({
+class PrimeNetShell extends StatefulWidget {
+  const PrimeNetShell({
     super.key,
     required this.darkMode,
     required this.onThemeChanged,
@@ -64,18 +65,11 @@ class PrimeNetHome extends StatefulWidget {
   final ValueChanged<bool> onThemeChanged;
 
   @override
-  State<PrimeNetHome> createState() => _PrimeNetHomeState();
+  State<PrimeNetShell> createState() => _PrimeNetShellState();
 }
 
-class _PrimeNetHomeState extends State<PrimeNetHome> {
-  int selectedTab = 0;
-
-  final List<String> titles = [
-    'Home',
-    'Create Profile',
-    'Connection Logs',
-    'Settings',
-  ];
+class _PrimeNetShellState extends State<PrimeNetShell> {
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -95,13 +89,18 @@ class _PrimeNetHomeState extends State<PrimeNetHome> {
           '👑 PrimeNet VPN',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        centerTitle: false,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: Icon(Icons.shield_outlined, color: primeBlue),
+          ),
+        ],
       ),
-      body: pages[selectedTab],
+      body: pages[selectedIndex],
       bottomNavigationBar: NavigationBar(
-        selectedIndex: selectedTab,
+        selectedIndex: selectedIndex,
         onDestinationSelected: (index) {
-          setState(() => selectedTab = index);
+          setState(() => selectedIndex = index);
         },
         destinations: const [
           NavigationDestination(
@@ -138,58 +137,65 @@ class HomeScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        const SizedBox(height: 20),
-        Container(
-          height: 205,
-          width: 205,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: primeBlue, width: 4),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x552695FF),
-                blurRadius: 30,
-                spreadRadius: 4,
-              ),
-            ],
-          ),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('👑', style: TextStyle(fontSize: 42)),
-              Text(
-                'P',
-                style: TextStyle(
-                  fontSize: 76,
-                  fontWeight: FontWeight.w900,
-                  color: primeBlue,
+        const SizedBox(height: 18),
+        Center(
+          child: Container(
+            height: 210,
+            width: 210,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: primeBlue, width: 4),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x552695FF),
+                  blurRadius: 28,
+                  spreadRadius: 3,
                 ),
-              ),
-              Text(
-                'DISCONNECTED',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
+              ],
+            ),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('👑', style: TextStyle(fontSize: 38)),
+                Text(
+                  'P',
+                  style: TextStyle(
+                    fontSize: 76,
+                    fontWeight: FontWeight.w900,
+                    color: primeBlue,
+                  ),
+                ),
+                Text(
+                  'DISCONNECTED',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 24),
         const Center(
           child: Text(
-            'Choose a profile to get started',
+            'Select a profile to get started',
             style: TextStyle(color: Colors.grey),
           ),
         ),
         const SizedBox(height: 28),
         const Text(
-          'SERVERS',
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          'AVAILABLE SERVERS',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 12),
-        for (final country in ['Brazil', 'USA', 'Germany', 'United Kingdom'])
+        const SizedBox(height: 10),
+        for (final server in [
+          'Brazil',
+          'USA',
+          'Germany',
+          'United Kingdom',
+        ])
           Card(
             child: ListTile(
               leading: const Icon(Icons.public, color: primeBlue),
-              title: Text(country),
+              title: Text(server),
               subtitle: const Text('No profile configured'),
               trailing: const Text('-- ms'),
             ),
@@ -203,10 +209,7 @@ class HomeScreen extends StatelessWidget {
               children: const [
                 Text(
                   'LIVE SPEED',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 18),
                 Row(
@@ -231,7 +234,7 @@ class CreateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Your VPN profiles will appear here.'),
+      child: Text('Your saved VPN profiles will appear here.'),
     );
   }
 }
@@ -270,7 +273,7 @@ class SettingsScreen extends StatelessWidget {
         Card(
           child: SwitchListTile(
             title: const Text('Dark Mode'),
-            subtitle: const Text('Switch between dark and light themes'),
+            subtitle: const Text('Choose your app appearance'),
             value: darkMode,
             onChanged: onThemeChanged,
           ),
@@ -289,11 +292,11 @@ class SettingsScreen extends StatelessWidget {
               ),
               ListTile(
                 title: Text('Version'),
-                trailing: Text('0.1.0'),
+                trailing: Text('1.0.0'),
               ),
               ListTile(
                 title: Text('Developer'),
-                trailing: Text('PrimeNet'),
+                trailing: Text('Hemlock Protocol'),
               ),
             ],
           ),
