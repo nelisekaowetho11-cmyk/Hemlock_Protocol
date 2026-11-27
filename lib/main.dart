@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,7 +75,7 @@ class _PrimeNetShellState extends State<PrimeNetShell> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      const HomeScreen(),
+      const PrimeNetHomeScreen(),
       const CreateScreen(),
       const LogsScreen(),
       SettingsScreen(
@@ -125,105 +126,6 @@ class _PrimeNetShellState extends State<PrimeNetShell> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(18),
-      children: [
-        const SizedBox(height: 18),
-        Center(
-          child: Container(
-            height: 210,
-            width: 210,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: primeBlue, width: 4),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x552695FF),
-                  blurRadius: 28,
-                  spreadRadius: 3,
-                ),
-              ],
-            ),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('👑', style: TextStyle(fontSize: 38)),
-                Text(
-                  'P',
-                  style: TextStyle(
-                    fontSize: 76,
-                    fontWeight: FontWeight.w900,
-                    color: primeBlue,
-                  ),
-                ),
-                Text(
-                  'DISCONNECTED',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 24),
-        const Center(
-          child: Text(
-            'Select a profile to get started',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-        const SizedBox(height: 28),
-        const Text(
-          'AVAILABLE SERVERS',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 10),
-        for (final server in [
-          'Brazil',
-          'USA',
-          'Germany',
-          'United Kingdom',
-        ])
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.public, color: primeBlue),
-              title: Text(server),
-              subtitle: const Text('No profile configured'),
-              trailing: const Text('-- ms'),
-            ),
-          ),
-        const SizedBox(height: 18),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'LIVE SPEED',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 18),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('↑ Upload: 0 KB/s'),
-                    Text('↓ Download: 0 KB/s'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
